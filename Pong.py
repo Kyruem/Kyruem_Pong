@@ -1,4 +1,5 @@
 from pygame import *
+from random import randint
 font.init()
 
 # region window
@@ -69,8 +70,10 @@ class BallSprite(ImageSprite):
 
 # region Sprite
 p1 = PlayerSprite(filename="VengefulSpirit.png", pos=(0,250), size=(115,70))
-p2 = PlayerSprite(filename="ShadeSoul.png", pos=(885,250), size=(115,70))
+p2 = PlayerSprite(filename="ShadeSoul.png", pos=(WIDTH-115,250), size=(115,70))
 ball = BallSprite(filename="Dreamball.png", pos=(300,350), size=(70,70), speed=(2,4))
+winp1 = ImageSprite(filename="BaldurShell.png", pos=(450,312), size=(100,100))
+winp2 = ImageSprite(filename="GrubberflyElegy.png", pos=(450,312), size=(100,100))
 
 while not event.peek(QUIT):
     window.fill("black")
@@ -83,7 +86,19 @@ while not event.peek(QUIT):
     if ball.rect.top < 0 or ball.rect.bottom > HEIGHT:
         ball.VerticalBounce()
 
-    # if ball.rect.left < 0 or ball.rect.right > WIDTH:
+    if ball.collision(p1):
+        ball.HorizontalBounce()
+        ball.rect.left = p1.rect.right
+
+    if ball.collision(p2):
+        ball.HorizontalBounce()
+        ball.rect.right = p2.rect.left
+
+    if ball.rect.left < 0:
+        winp1.draw(window)
+
+    if ball.rect.right > WIDTH:
+        winp2.draw(window)
 
     ball.draw(window)
     ball.update()
